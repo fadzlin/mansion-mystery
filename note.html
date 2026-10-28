@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Note</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Two paper objects: a ruled police notebook page, and a manila evidence tag on a string. */
+:root {
+  --night: #1b1626;
+  --paper: #fbf7ea;
+  --rule: #b9cbe3;
+  --margin: #d9776f;
+  --ink: #23262e;
+  --manila: #e3c993;
+  --manila-dark: #b39557;
+  --stamp: #b3261e;
+  --type: "Special Elite", "Courier New", Courier, monospace;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--night); color: var(--ink); font-family: var(--body); display: grid; place-items: center; padding: 20px 16px; }
+.notebook {
+  width: min(100%, 440px); background: var(--paper); border-radius: 4px 4px 6px 6px; position: relative;
+  box-shadow: 0 14px 30px rgba(0,0,0,.5); padding: 30px 22px 26px 64px;
+  background-image:
+    linear-gradient(90deg, transparent 50px, var(--margin) 50px, var(--margin) 52px, transparent 52px),
+    repeating-linear-gradient(180deg, transparent 0 31px, var(--rule) 31px 32px);
+  background-position: 0 0, 0 16px;
+}
+.notebook::before { /* spiral holes along the top */
+  content: ""; position: absolute; left: 16px; right: 16px; top: 8px; height: 10px;
+  background: radial-gradient(circle at 6px 5px, var(--night) 4px, transparent 5px) 0 0 / 22px 10px repeat-x;
+}
+.notebook .head { font-family: var(--type); font-size: 13px; letter-spacing: .14em; color: #5d6a80; margin: 0 0 4px; line-height: 32px; }
+.notebook .text { font-family: var(--type); font-size: 20px; line-height: 32px; margin: 0; white-space: pre-line; }
+.tag {
+  width: min(100%, 420px); background: var(--manila); position: relative; padding: 26px 24px 24px 56px;
+  clip-path: polygon(34px 0, 100% 0, 100% 100%, 34px 100%, 0 50%);
+  box-shadow: 0 14px 30px rgba(0,0,0,.5); color: #2d2212;
+}
+.tag::before { /* eyelet */
+  content: ""; position: absolute; left: 22px; top: calc(50% - 8px); width: 16px; height: 16px; border-radius: 50%;
+  background: var(--night); box-shadow: 0 0 0 4px var(--manila-dark);
+}
+.tag .stamp {
+  display: inline-block; font-family: var(--type); font-size: 14px; letter-spacing: .2em; color: var(--stamp);
+  border: 2px solid var(--stamp); padding: 2px 8px; transform: rotate(-3deg); margin-bottom: 12px;
+}
+.tag dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px; }
+.tag dt { text-transform: uppercase; letter-spacing: .1em; color: #6d5630; font-size: 12px; padding-top: 2px; }
+.tag dd { margin: 0; font-weight: 700; }
+.tag .text { font-family: var(--type); font-size: 19px; line-height: 1.5; margin: 14px 0 0; border-top: 1px dashed var(--manila-dark); padding-top: 12px; }
+.missing { color: #b8a9c9; }
+</style>
+</head>
+<body>
+<div id="out"></div>
+<script src="story.js"></script>
+<script>
+(function () {
+  const id = new URLSearchParams(location.search).get('id');
+  const n = (typeof NOTES !== 'undefined') && NOTES[id];
+  const out = document.getElementById('out');
+  function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  if (!n) { out.appendChild(el('p', 'missing', 'Nothing written here.')); return; }
+  if (n.kind === 'evidence') {
+    document.title = 'Evidence: ' + n.title;
+    const t = el('article', 'tag');
+    t.appendChild(el('span', 'stamp', 'EVIDENCE'));
+    const dl = el('dl');
+    dl.appendChild(el('dt', null, 'Item')); dl.appendChild(el('dd', null, n.title));
+    if (n.place) { dl.appendChild(el('dt', null, 'Found')); dl.appendChild(el('dd', null, n.place)); }
+    t.appendChild(dl);
+    t.appendChild(el('p', 'text', n.text));
+    out.appendChild(t);
+  } else {
+    document.title = 'Officer’s note';
+    const b = el('article', 'notebook');
+    b.appendChild(el('p', 'head', 'POLICE NOTEBOOK · ' + (n.badge || 'PC')));
+    b.appendChild(el('p', 'text', n.text));
+    out.appendChild(b);
+  }
+})();
+</script>
+</body>
+</html>

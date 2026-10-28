@@ -45,9 +45,25 @@ function removeGlobalMessages() {
   }
 }
 
+// Secret doors (Kitchen cupboard, Lounge bookcase): the "open" picture shows
+// while someone stands near, and hides again when they walk away.
+function secretDoors() {
+  try {
+    var url = (WA.room && WA.room.mapURL) || '';
+    if (!/\/rooms\/(kitchen|lounge)\.tmj/.test(url)) return;
+    WA.room.hideLayer('secret-open');
+    WA.room.onEnterLayer('secret-near').subscribe(function () { WA.room.showLayer('secret-open'); });
+    WA.room.onLeaveLayer('secret-near').subscribe(function () { WA.room.hideLayer('secret-open'); });
+    console.log('[mansion] secret door ready');
+  } catch (e) {
+    console.log('[mansion] secret door failed', e);
+  }
+}
+
 function start() {
   applyRestrictions();
   removeGlobalMessages();
+  secretDoors();
 }
 
 if (typeof WA.onInit === 'function') {

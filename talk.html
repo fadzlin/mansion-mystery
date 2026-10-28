@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Statement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* A witness statement read by lamplight: gilt-framed portrait, parchment speech card, page turns. */
+:root {
+  --night: #1b1626;        /* the mansion at night */
+  --panel: #2a2236;        /* wood-panel plum */
+  --gilt: #c9a35b;         /* picture-frame gold */
+  --gilt-dim: #8a6d3a;
+  --parchment: #f2e8d2;
+  --ink: #2b2118;
+  --muted-ink: #6b5a46;
+  --display: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: radial-gradient(120% 90% at 30% 0%, #3a2d4a 0%, var(--night) 60%) fixed, var(--night);
+  color: var(--parchment); font-family: var(--body); font-size: 17px; line-height: 1.55;
+  display: flex; flex-direction: column; padding: 20px max(16px, 4vw);
+}
+.statement { flex: 1; display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 24px; align-items: start; align-content: start; max-width: 860px; width: 100%; margin: 0 auto; }
+.sitter { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.frame {
+  width: 100%; aspect-ratio: 1; max-width: 100%;
+  padding: 10px; background: linear-gradient(135deg, #e6c47b, var(--gilt) 40%, var(--gilt-dim));
+  border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 0 0 2px rgba(255,255,255,.18);
+}
+.frame-inner { width: 100%; height: 100%; background: #f6f1e4; border-radius: 2px; overflow: hidden; box-shadow: inset 0 0 0 3px rgba(60,40,10,.35); }
+.frame img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; display: block; }
+.plate { text-align: center; }
+.plate h1 { font-family: var(--display); font-weight: 400; font-size: 30px; margin: 0; letter-spacing: .02em; color: var(--gilt); text-wrap: balance; }
+.plate p { margin: 0; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: #b8a9c9; }
+.speech {
+  position: relative; background: var(--parchment); color: var(--ink);
+  border-radius: 10px; padding: 22px 24px 20px; min-height: 180px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.4);
+}
+.speech::before {
+  content: ""; position: absolute; left: -12px; top: 40px; width: 0; height: 0;
+  border-top: 12px solid transparent; border-bottom: 12px solid transparent; border-right: 12px solid var(--parchment);
+}
+.speech .label { font-family: var(--display); font-size: 14px; letter-spacing: .12em; color: var(--muted-ink); margin: 0 0 8px; }
+.speech .words { margin: 0; white-space: pre-line; font-size: 18px; max-width: 60ch; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: 860px; width: 100%; margin: 20px auto 0; }
+.dots { display: flex; gap: 8px; }
+.dots span { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--gilt); }
+.dots span.on { background: var(--gilt); }
+button {
+  font: 600 16px var(--body); padding: 10px 18px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--gilt-dim); background: transparent; color: var(--parchment);
+}
+button.next { background: var(--gilt); color: #23180a; border-color: var(--gilt); }
+button:disabled { opacity: .35; cursor: default; }
+button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.missing { margin: auto; text-align: center; color: #b8a9c9; }
+@media (max-width: 560px) {
+  .statement { grid-template-columns: 1fr; }
+  .sitter { flex-direction: row; }
+  .frame { width: 96px; flex: none; padding: 5px; }
+  .plate { text-align: left; }
+  .speech::before { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .speech { transition: opacity .18s ease; }
+  .speech.turning { opacity: .25; }
+}
+</style>
+</head>
+<body>
+<main class="statement" id="statement" hidden>
+  <div class="sitter">
+    <div class="frame"><div class="frame-inner"><img id="portrait" alt=""></div></div>
+    <div class="plate"><h1 id="name"></h1><p id="role"></p></div>
+  </div>
+  <section class="speech" id="speech" aria-live="polite">
+    <p class="label" id="label">Statement</p>
+    <p class="words" id="words"></p>
+  </section>
+</main>
+<nav class="nav" id="nav" hidden>
+  <button id="prev" type="button">Back</button>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <button id="next" class="next" type="button">Next</button>
+</nav>
+<p class="missing" id="missing" hidden>This person has nothing to say yet.</p>
+
+<script src="story.js"></script>
+<script>
+(function () {
+  const key = new URLSearchParams(location.search).get('c');
+  const who = (typeof CHARACTERS !== 'undefined') && CHARACTERS[key];
+  if (!who) { document.getElementById('missing').hidden = false; return; }
+  document.title = who.name;
+  document.getElementById('statement').hidden = false;
+  document.getElementById('nav').hidden = false;
+  document.getElementById('name').textContent = who.name;
+  document.getElementById('role').textContent = who.role;
+  // preload every expression so page turns don't flicker
+  who.pages.forEach(p => { const i = new Image(); i.src = 'portraits/' + p.img + '.png'; });
+  const dots = document.getElementById('dots');
+  who.pages.forEach(() => dots.appendChild(document.createElement('span')));
+  let i = 0;
+  function show(n) {
+    i = Math.max(0, Math.min(who.pages.length - 1, n));
+    const page = who.pages[i], speech = document.getElementById('speech');
+    speech.classList.add('turning');
+    setTimeout(() => {
+      document.getElementById('portrait').src = 'portraits/' + page.img + '.png';
+      document.getElementById('portrait').alt = who.name;
+      document.getElementById('words').textContent = page.text;
+      document.getElementById('label').textContent = 'Statement · ' + (i + 1) + ' of ' + who.pages.length;
+      speech.classList.remove('turning');
+    }, 120);
+    [...dots.children].forEach((d, k) => d.classList.toggle('on', k === i));
+    document.getElementById('prev').disabled = i === 0;
+    const next = document.getElementById('next');
+    next.disabled = i === who.pages.length - 1;
+  }
+  document.getElementById('prev').addEventListener('click', () => show(i - 1));
+  document.getElementById('next').addEventListener('click', () => show(i + 1));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') show(i + 1);
+    if (e.key === 'ArrowLeft') show(i - 1);
+  });
+  show(0);
+})();
+</script>
+</body>
+</html>

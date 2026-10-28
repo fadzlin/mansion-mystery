@@ -19,8 +19,36 @@ function applyRestrictions() {
   });
 }
 
-if (typeof WA.onInit === 'function') {
-  WA.onInit().then(applyRestrictions).catch(applyRestrictions);
-} else {
+// Try to remove the built-in "global messages" menu entry.
+// Undocumented whether built-in entries can be removed, so log the outcome either way.
+function removeGlobalMessages() {
+  try {
+    if (!WA.ui || typeof WA.ui.getMenuCommand !== 'function') {
+      console.log('[mansion] getMenuCommand not available');
+      return;
+    }
+    Promise.resolve(WA.ui.getMenuCommand('globalMessages'))
+      .then(function (menu) {
+        if (menu && typeof menu.remove === 'function') {
+          menu.remove();
+          console.log('[mansion] globalMessages menu removed');
+        } else {
+          console.log('[mansion] globalMessages menu not found');
+        }
+      })
+      .catch(function (e) { console.log('[mansion] globalMessages removal failed', e); });
+  } catch (e) {
+    console.log('[mansion] globalMessages removal failed', e);
+  }
+}
+
+function start() {
   applyRestrictions();
+  removeGlobalMessages();
+}
+
+if (typeof WA.onInit === 'function') {
+  WA.onInit().then(start).catch(start);
+} else {
+  start();
 }

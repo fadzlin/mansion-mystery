@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detective's Rules</title>
+<style>
+  :root { --bg:#0f1626; --card:#16203a; --gold:#e3c27e; --ink:#e9e4d8; --muted:#a8a294; --line:#2c3a5e; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 Georgia, "Times New Roman", serif; padding:24px 16px; }
+  main { max-width:760px; margin:0 auto; }
+  h1 { color:var(--gold); font-weight:normal; font-size:28px; margin:0 0 4px; letter-spacing:.02em; }
+  .lead { color:var(--muted); margin:0 0 20px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+  .rule { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:12px 14px; }
+  .rule.goal { grid-column:1/-1; border-color:var(--gold); }
+  .id { color:var(--gold); font-weight:bold; margin-bottom:4px; }
+  .kw { color:var(--gold); font-variant:small-caps; letter-spacing:.04em; }
+  .then { margin-top:4px; padding-top:4px; border-top:1px dashed var(--line); }
+  p { margin:0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Detective's Rules of Investigation</h1>
+  <p class="lead">Determine which of the five suspects is the killer. Apply backward chaining in your investigation.</p>
+  <div class="grid">
+    <div class="rule goal"><div class="id">R1</div>
+      <p><span class="kw">if</span> suspect has means</p><p><span class="kw">and</span> suspect has opportunity</p><p><span class="kw">and</span> suspect has motive</p>
+      <p class="then"><span class="kw">then</span> suspect is killer</p></div>
+    <div class="rule"><div class="id">R2</div>
+      <p><span class="kw">if</span> suspect is at crime scene</p><p><span class="kw">and</span> time is within time of death</p>
+      <p class="then"><span class="kw">then</span> suspect has opportunity</p></div>
+    <div class="rule"><div class="id">R3</div>
+      <p><span class="kw">if</span> knife has victim's blood</p><p><span class="kw">and</span> cause of death is stabbing</p>
+      <p class="then"><span class="kw">then</span> knife is murder weapon</p></div>
+    <div class="rule"><div class="id">R4</div>
+      <p><span class="kw">if</span> bullet found at crime scene</p><p><span class="kw">and</span> cause of death is bullet wound</p>
+      <p class="then"><span class="kw">then</span> pistol is murder weapon</p></div>
+    <div class="rule"><div class="id">R5</div>
+      <p><span class="kw">if</span> victim drank poisoned water</p><p><span class="kw">and</span> cause of death is poisoning</p>
+      <p class="then"><span class="kw">then</span> murder weapon is poison</p></div>
+    <div class="rule"><div class="id">R6</div>
+      <p><span class="kw">if</span> shovel has victim's blood</p><p><span class="kw">and</span> cause of death is stabbing</p>
+      <p class="then"><span class="kw">then</span> shovel is murder weapon</p></div>
+    <div class="rule"><div class="id">R7</div>
+      <p><span class="kw">if</span> suspect held murder weapon</p>
+      <p class="then"><span class="kw">then</span> suspect has means</p></div>
+    <div class="rule"><div class="id">R8</div>
+      <p><span class="kw">if</span> suspect was angry at victim</p><p><span class="kw">or</span> suspect gain financial benefits</p>
+      <p class="then"><span class="kw">then</span> suspect has motive</p></div>
+  </div>
+</main>
+</body>
+</html>

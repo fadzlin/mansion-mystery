@@ -1,11 +1,14 @@
 // The Mansion: classroom restrictions.
 // Runs in every player's browser on every map of the mansion.
-// It hides the map-editor tools (which may include "Send global message"),
-// the invite button and the room list. Kick/ban cannot be hidden by a script.
+// It hides the map-editor tools, the invite button and the room list, and
+// turns off camera and microphone (text chat only). Kick/ban and global
+// text messages cannot be hidden by a script.
 
 function applyRestrictions() {
   const controls = WA.controls;
-  ['disableMapEditor', 'disableInviteButton', 'disableRoomList'].forEach(function (name) {
+  // Text chat only: camera and microphone are switched off for everyone.
+  ['disableMapEditor', 'disableInviteButton', 'disableRoomList',
+   'disableWebcam', 'disableMicrophone'].forEach(function (name) {
     try {
       if (typeof controls[name] === 'function') {
         controls[name]();

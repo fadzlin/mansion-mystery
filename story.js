@@ -63,6 +63,10 @@ const GREETINGS = [
   'Quiet house, isn’t it? Too quiet, if you ask me.',
   'Good luck, detective. Everyone here has a story.',
   'Write everything down. The small details are the ones that matter.',
+  'Don’t mind me, detective. Just keeping an eye on the stairs.',
+  'Afternoon, detective. Let me know if you need anything.',
+  'The family has been told not to leave their rooms. Most of them, anyway.',
+  'I’ve searched this hall twice. Maybe fresh eyes will spot something.',
 ];
 
 const NOTES = {
@@ -77,4 +81,25 @@ const NOTES = {
   // ---- Parlor ----
   'parlor-officer-1': { kind: 'officer', badge: 'PC 0221', text: 'We must not contaminate this crime scene!' },
   'parlor-officer-2': { kind: 'officer', badge: 'PC 0583', text: 'There is an empty glass here. And some spilled liquid on the floor...' },
+  // ---- Hall ----
+  'hall-officer-1': { kind: 'officer', badge: 'PC 0349', text: 'Forensic said the stain on the shovel is animal blood.' },
+  'hall-officer-2': { kind: 'officer', badge: 'PC 1022', text: 'Collecting evidence..' },
+  // ---- Lounge ----
+  'lounge-officer-1': { kind: 'officer', badge: 'PC 0876', text: 'Faiz said he gave his pistol to Salim because there are a lot of wild boars in the forest at the back of the house.' },
+  'lounge-officer-2': { kind: 'officer', badge: 'PC 0164', text: 'It is horrible.. forensic said victim died of stabbing..' },
+  // ---- Library ----
+  'library-officer-1': { kind: 'officer', badge: 'PC 0490', text: GREETINGS[7] },
+  'library-officer-2': { kind: 'officer', badge: 'PC 1311', text: GREETINGS[6] },
+  'library-officer-3': { kind: 'officer', badge: 'PC 0705', text: 'We found a knife outside of conservatory window.' },
+  // ---- Study ----
+  'study-officer-1': { kind: 'officer', badge: 'PC 0932', text: 'Forensic said there are traces of victim’s blood on the knife.' },
+  // ---- Main hall ----
+  'hub-officer-1': { kind: 'officer', badge: 'PC 0118', text: 'We found a bullet at the garden!' },
+  'hub-officer-2': { kind: 'officer', badge: 'PC 0657', text: 'Salim said this is where he fell down.' },
+  'hub-officer-3': { kind: 'officer', badge: 'PC 1049', text: 'Forensic said the spilled liquid is pesticide..' },
+  'hub-officer-4': { kind: 'officer', badge: 'PC 0283', text: GREETINGS[2] },
+  'hub-officer-5': { kind: 'officer', badge: 'PC 0811', text: GREETINGS[3] },
+  'hub-officer-6': { kind: 'officer', badge: 'PC 0574', text: GREETINGS[8] },
+  'hub-officer-7': { kind: 'officer', badge: 'PC 1197', text: GREETINGS[5] },
+  'hub-officer-8': { kind: 'officer', badge: 'PC 0436', text: GREETINGS[10] },
 };

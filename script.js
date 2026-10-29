@@ -51,9 +51,25 @@ function secretDoors() {
   try {
     var url = (WA.room && WA.room.mapURL) || '';
     if (!/\/rooms\/(kitchen|lounge)\.tmj/.test(url)) return;
+    var inKitchen = /\/rooms\/kitchen\.tmj/.test(url);
+    var popup = null, message = null;
     WA.room.hideLayer('secret-open');
-    WA.room.onEnterLayer('secret-near').subscribe(function () { WA.room.showLayer('secret-open'); });
-    WA.room.onLeaveLayer('secret-near').subscribe(function () { WA.room.hideLayer('secret-open'); });
+    WA.room.onEnterLayer('secret-near').subscribe(function (ev) {
+      WA.room.showLayer('secret-open');
+      // In the Kitchen, the discovery line. Skipped when arriving back out of the passage.
+      if (!inKitchen || (ev && ev.reason === 'initial')) return;
+      try {
+        popup = WA.ui.openPopup('hiddenDoorPopup', 'There’s a hidden door?!', []);
+      } catch (e) {
+        message = WA.ui.displayActionMessage({ message: 'There’s a hidden door?!', callback: function () {}, type: 'message' });
+      }
+    });
+    WA.room.onLeaveLayer('secret-near').subscribe(function () {
+      WA.room.hideLayer('secret-open');
+      try { if (popup) popup.close(); } catch (e) {}
+      try { if (message) message.remove(); } catch (e) {}
+      popup = null; message = null;
+    });
     console.log('[mansion] secret door ready');
   } catch (e) {
     console.log('[mansion] secret door failed', e);

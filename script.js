@@ -50,7 +50,7 @@ function removeGlobalMessages() {
 function secretDoors() {
   try {
     var url = (WA.room && WA.room.mapURL) || '';
-    if (!/\/rooms\/(kitchen|lounge)\.tmj/.test(url)) return;
+    if (!/\/rooms\/(kitchen|lounge|parlor|conservatory)\.tmj/.test(url)) return;
     var inKitchen = /\/rooms\/kitchen\.tmj/.test(url);
     var popup = null, message = null;
     WA.room.hideLayer('secret-open');
@@ -76,10 +76,36 @@ function secretDoors() {
   }
 }
 
+// Thoughts: walking up to certain objects shows what the detective notices,
+// as a popup over the object. Each spot is a map layer named "thought-N"
+// carrying the text ("thought") and the popup's position ("thoughtPopup").
+function thoughts() {
+  if (!WA.room || typeof WA.room.getTiledMap !== 'function') return;
+  WA.room.getTiledMap().then(function (map) {
+    (map.layers || []).forEach(function (layer) {
+      if (!/^thought-\d+$/.test(layer.name)) return;
+      var props = {};
+      (layer.properties || []).forEach(function (p) { props[p.name] = p.value; });
+      if (!props.thought || !props.thoughtPopup) return;
+      var popup = null;
+      WA.room.onEnterLayer(layer.name).subscribe(function (ev) {
+        if (ev && ev.reason === 'initial') return;
+        try { popup = WA.ui.openPopup(props.thoughtPopup, props.thought, []); } catch (e) { console.log('[mansion] thought failed', e); }
+      });
+      WA.room.onLeaveLayer(layer.name).subscribe(function () {
+        try { if (popup) popup.close(); } catch (e) {}
+        popup = null;
+      });
+      console.log('[mansion] thought ready: ' + layer.name);
+    });
+  }).catch(function (e) { console.log('[mansion] thoughts failed', e); });
+}
+
 function start() {
   applyRestrictions();
   removeGlobalMessages();
   secretDoors();
+  thoughts();
 }
 
 if (typeof WA.onInit === 'function') {

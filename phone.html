@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Musa's phone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* The victim's phone, held up to the light: a handset frame around his chat screens, swiped with Back / Next. */
+:root {
+  --night: #1b1626;
+  --case: #121014;
+  --bezel: #2b2830;
+  --ink: #ece9f5;
+  --muted: #a49fba;
+  --accent: #c9a35b;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--night); color: var(--ink); font-family: var(--body); display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 18px 16px; }
+.label { margin: 0; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.phone {
+  width: min(100%, 320px); flex: 1; min-height: 0; max-height: 640px;
+  background: var(--case); border-radius: 36px; padding: 14px; position: relative;
+  box-shadow: 0 18px 40px rgba(0,0,0,.6), inset 0 0 0 2px var(--bezel);
+  display: flex; flex-direction: column;
+}
+.phone::before { content: ""; position: absolute; top: 18px; left: 50%; width: 70px; height: 18px; margin-left: -35px; background: var(--case); border-radius: 0 0 12px 12px; z-index: 1; }
+.screen { flex: 1; min-height: 0; border-radius: 24px; overflow: auto; background: #fff; }
+.screen img { width: 100%; display: block; }
+.controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: min(100%, 320px); }
+button { font: 600 15px var(--body); padding: 9px 16px; border-radius: 8px; cursor: pointer; border: 1px solid #5d5674; background: transparent; color: var(--ink); }
+button.next { background: var(--accent); color: #23180a; border-color: var(--accent); }
+button:disabled { opacity: .35; cursor: default; }
+button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.count { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<p class="label">Musa’s phone · messages</p>
+<div class="phone"><div class="screen" id="screen"><img id="shot" alt="Chat screenshot from Musa's phone"></div></div>
+<div class="controls">
+  <button id="prev" type="button">Back</button>
+  <span class="count" id="count"></span>
+  <button id="next" class="next" type="button">Next</button>
+</div>
+<script>
+(function () {
+  const shots = ['phone-1', 'phone-2', 'phone-3', 'phone-4'];
+  shots.forEach(s => { const i = new Image(); i.src = 'portraits/' + s + '.png'; });
+  let i = 0;
+  function show(n) {
+    i = Math.max(0, Math.min(shots.length - 1, n));
+    document.getElementById('shot').src = 'portraits/' + shots[i] + '.png';
+    document.getElementById('screen').scrollTop = 0;
+    document.getElementById('count').textContent = (i + 1) + ' of ' + shots.length;
+    document.getElementById('prev').disabled = i === 0;
+    document.getElementById('next').disabled = i === shots.length - 1;
+  }
+  document.getElementById('prev').addEventListener('click', () => show(i - 1));
+  document.getElementById('next').addEventListener('click', () => show(i + 1));
+  document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') show(i + 1); if (e.key === 'ArrowLeft') show(i - 1); });
+  show(0);
+})();
+</script>
+</body>
+</html>

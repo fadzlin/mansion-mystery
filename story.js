@@ -71,4 +71,10 @@ const NOTES = {
   'kitchen-officer-2': { kind: 'officer', badge: 'PC 0952', text: 'Forensic said fingerprints on pistol belong to Musa and Faiz.' },
   'kitchen-officer-3': { kind: 'officer', badge: 'PC 1183', text: 'Collecting evidences...' },
   'kitchen-knife-block': { kind: 'evidence', title: 'Knife block', place: 'Kitchen, side counter', text: 'This knife block is missing a knife...' },
+  // ---- Dining Room ----
+  'dining-officer-1': { kind: 'officer', badge: 'PC 0738', text: GREETINGS[1] },
+  'dining-officer-2': { kind: 'officer', badge: 'PC 1264', text: 'Forensic said fingerprints on knife belong to Daud, Nora and Dania.' },
+  // ---- Parlor ----
+  'parlor-officer-1': { kind: 'officer', badge: 'PC 0221', text: 'We must not contaminate this crime scene!' },
+  'parlor-officer-2': { kind: 'officer', badge: 'PC 0583', text: 'There is an empty glass here. And some spilled liquid on the floor...' },
 };
